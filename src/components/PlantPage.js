@@ -9,31 +9,23 @@ function PlantPage() {
 
   useEffect(() => {
     fetch("http://localhost:6001/plants")
-      .then((res) => res.json())
-      .then((data) => setPlants(data));
+      .then((r) => r.json())
+      .then(setPlants);
   }, []);
 
   function handleAddPlant(newPlant) {
     setPlants([...plants, newPlant]);
   }
 
-  function handleToggleStock(id) {
-    setPlants((prevPlants) =>
-      prevPlants.map((plant) =>
-        plant.id === id ? { ...plant, soldOut: !plant.soldOut } : plant
-      )
-    );
-  }
-
-  const filteredPlants = plants.filter((plant) =>
+  const plantsToDisplay = plants.filter((plant) =>
     plant.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <main>
       <NewPlantForm onAddPlant={handleAddPlant} />
-      <Search onSearch={setSearchTerm} />
-      <PlantList plants={filteredPlants} onToggleStock={handleToggleStock} />
+      <Search onSearchChange={setSearchTerm} />
+      <PlantList plants={plantsToDisplay} />
     </main>
   );
 }
