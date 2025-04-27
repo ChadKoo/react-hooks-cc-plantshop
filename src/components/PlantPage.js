@@ -17,6 +17,20 @@ function PlantPage() {
     setPlants([...plants, newPlant]);
   }
 
+  function handleDeletePlant(id) {
+    fetch(`http://localhost:6001/plants/${id}`, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        if (response.ok) {
+          setPlants((prevPlants) => prevPlants.filter((plant) => plant.id !== id));
+        } else {
+          console.error('Failed to delete plant');
+        }
+      })
+      .catch((error) => console.error('Error:', error));
+  }
+
   const plantsToDisplay = plants.filter((plant) =>
     plant.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -25,7 +39,7 @@ function PlantPage() {
     <main>
       <NewPlantForm onAddPlant={handleAddPlant} />
       <Search onSearchChange={setSearchTerm} />
-      <PlantList plants={plantsToDisplay} />
+      <PlantList plants={plantsToDisplay} onDeletePlant={handleDeletePlant} />
     </main>
   );
 }
